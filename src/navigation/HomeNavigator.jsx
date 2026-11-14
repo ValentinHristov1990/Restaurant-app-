@@ -1,13 +1,23 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import HomeScreen from "../screens/HomeScreen";
+import { Ionicons } from "@expo/vector-icons";
+import { Pressable } from "react-native";
 
 
 export default function HomeNavigator() {
     const Stack = createStackNavigator()
 
     return (
-        <Stack.Navigator>
-            <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Navigator
+            screenOptions={{
+                headerRight: () => (
+                    <Pressable onPress={() => alert("Pressed!")}>
+                        <Ionicons name="cart" size={24} color="blue" style={{ marginRight: 16 }} />
+                    </Pressable>
+                ),
+            }}
+        >
+            <Stack.Screen name="Home" component={HomeScreen} options={{ title: "Menu" }} />
         </Stack.Navigator>
     );
 }
