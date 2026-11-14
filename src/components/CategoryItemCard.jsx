@@ -5,6 +5,7 @@ export default function CategoryItemCard({
     description,
     price,
     imageUrl,
+    onPress,
 }) {
     return (
         <View style={[styles.container, styles.containerHorizontal]}>
@@ -16,7 +17,7 @@ export default function CategoryItemCard({
             </View>
 
             <View style={styles.rightAction}>
-                <Pressable style={styles.addButton}>
+                <Pressable style={styles.addButton} onPress={onPress}>
                     <Text style={styles.addButtonText}>Add</Text>
                 </Pressable>
             </View>

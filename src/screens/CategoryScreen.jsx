@@ -1,14 +1,17 @@
 import { StyleSheet, View } from "react-native";
 import { getCategoryItems } from "../data/data";
 import CategoryItemCard from "../components/CategoryItemCard";
+import { useEffect } from "react";
 
 export default function CategoryScreen({
     route,
     navigation
 }) {
-    navigation.setOptions({
-        title: route.params.categoryName
-    })
+    useEffect(() => {
+        navigation.setOptions({
+            title: route.params.categoryName
+        });
+    }, [navigation, route.params.categoryName]);
 
     const categoryId = route.params.categoryId;
     const categoryItem = getCategoryItems(categoryId);
@@ -19,6 +22,7 @@ export default function CategoryScreen({
                 <CategoryItemCard
                     key={item.id}
                     {...item}
+                    onPress={() => navigation.navigate("Details", { item })}
                 />
             ))}
         </View>

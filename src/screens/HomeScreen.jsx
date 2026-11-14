@@ -23,7 +23,10 @@ export default function HomeScreen({ navigation }) {
                     data={featuredItems}
                     keyExtractor={(item) => item.id}
                     renderItem={({ item }) => (
-                        <FeaturedCard {...item} />)}
+                        <Link screen="Details" params={{ item }}>
+                            <FeaturedCard {...item} />
+                        </Link>
+                    )}
                     horizontal
                     contentContainerStyle={styles.featuredList}
                 />
@@ -32,8 +35,8 @@ export default function HomeScreen({ navigation }) {
             <View style={styles.section}>
                 <Text style={styles.sectionTitle}>Categories</Text>
                 {categories.map((category) => (
-                    <Link screen='Category' params={{ categoryId: category.id, categoryName: category.title }} style={{ marginBottom: 12, }}>
-                        <CategoryCard key={category.id} title={category.title} />
+                    <Link key={category.id} screen='Category' params={{ categoryId: category.id, categoryName: category.title }} style={{ marginBottom: 12, }}>
+                        <CategoryCard title={category.title} />
                     </Link>
                 ))}
             </View>
