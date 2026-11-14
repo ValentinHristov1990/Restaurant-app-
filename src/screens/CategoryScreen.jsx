@@ -2,7 +2,14 @@ import { StyleSheet, View } from "react-native";
 import { getCategoryItems } from "../data/data";
 import CategoryItemCard from "../components/CategoryItemCard";
 
-export default function CategoryScreen({ route }) {
+export default function CategoryScreen({
+    route,
+    navigation
+}) {
+    navigation.setOptions({
+        title: route.params.categoryName
+    })
+
     const categoryId = route.params.categoryId;
     const categoryItem = getCategoryItems(categoryId);
 

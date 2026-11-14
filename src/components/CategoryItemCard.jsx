@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 
 export default function CategoryItemCard({
     name,
@@ -13,6 +13,12 @@ export default function CategoryItemCard({
                 <Text style={styles.title}>{name}</Text>
                 <Text style={styles.subtitle}>{description}</Text>
                 <Text style={styles.price}>{price}</Text>
+            </View>
+
+            <View style={styles.rightAction}>
+                <Pressable style={styles.addButton}>
+                    <Text style={styles.addButtonText}>Add</Text>
+                </Pressable>
             </View>
         </View>
     );
