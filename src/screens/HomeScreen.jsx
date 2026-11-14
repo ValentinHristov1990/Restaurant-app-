@@ -1,9 +1,9 @@
-import { FlatList, ScrollView, StyleSheet, Text, View } from "react-native";
+import { FlatList, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { categories, featuredItems } from "../data/data";
 import FeaturedCard from "../components/FeaturedCard";
 import CategoryCard from "../components/CategoryCard";
 
-export default function HomeScreen() {
+export default function HomeScreen({ navigation }) {
     return (
         <ScrollView style={styles.container}>
             <View style={styles.header}>
@@ -31,7 +31,9 @@ export default function HomeScreen() {
             <View style={styles.section}>
                 <Text style={styles.sectionTitle}>Categories</Text>
                 {categories.map((cat) => (
-                    <CategoryCard key={cat.id} title={cat.title} />
+                    <Pressable onPress={() => navigation.navigate('Category', { categoryId: cat.id })}>
+                        <CategoryCard key={cat.id} title={cat.title} />
+                    </Pressable>
                 ))}
             </View>
         </ScrollView>

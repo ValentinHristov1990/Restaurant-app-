@@ -10,7 +10,7 @@ export default function CategoryCard({
                 <Text style={styles.title}>{title}</Text>
                 <Text style={styles.itemCount}>5 items</Text>
             </View>
-            <Text style={styles.arrow}></Text>
+            <Text style={styles.arrow}>{">"}</Text>
         </View>
     );
 }
