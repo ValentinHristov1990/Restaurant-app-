@@ -225,3 +225,7 @@ export const featuredItems = menuItems.filter((item) =>
 
 export const getCategoryItems = (categoryId) =>
   menuItems.filter((item) => item.categoryId === categoryId);
+
+const categoryURL =
+  "https://dxxniqehqtrjxggozehp.supabase.co/rest/v1/categories";
+const mealURL = "https://dxxniqehqtrjxggozehp.supabase.co/rest/v1/meals";
