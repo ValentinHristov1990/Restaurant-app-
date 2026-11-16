@@ -1,4 +1,4 @@
-import { Alert, FlatList, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Alert, FlatList, RefreshControl, ScrollView, StyleSheet, Text, View } from "react-native";
 import { featuredItems } from "../data/data";
 import FeaturedCard from "../components/FeaturedCard";
 import CategoryCard from "../components/CategoryCard";
@@ -9,14 +9,31 @@ import { categoryApi } from "../api";
 export default function HomeScreen() {
 
     const [categories, setCategories] = useState([]);
+    const [refreshing, setRefreshing] = useState(false);
 
     useEffect(() => {
         categoryApi.getAll()
             .then(setCategories)
             .catch((err) => Alert.alert("Error", err.message))
-    }, [])
+    }, []);
+
+    const refreshHandler = async () => {
+        setRefreshing(true);
+        try {
+            const data = await categoryApi.getAll();
+            setCategories(data);
+        } catch (error) {
+            Alert.alert("Error:", error.message);
+        } finally {
+            setRefreshing(false);
+        }
+    }
+
     return (
-        <ScrollView style={styles.container}>
+        <ScrollView style={styles.container}
+            refreshControl={<RefreshControl refreshing={false} onRefresh={refreshHandler} />}
+        >
+
             <View style={styles.header}>
                 <Text style={styles.restaurantName}>Tasty Bites</Text>
                 <View style={styles.headerInfo}>
