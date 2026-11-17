@@ -5,6 +5,7 @@ import { mealApi } from "../api";
 import SizeSelector from "../components/SizeSelector";
 import ExtrasSelector from "../components/ExtrasSelector";
 import QuantityStepper from "../components/QuantityStepper";
+import { calculateTotalPrice } from "../utils/cartUtils";
 
 export const AVAILABLE_EXTRAS = [
     "Extra Cheese",
@@ -20,7 +21,7 @@ export default function DetailsScreen({
 }) {
     const mealId = route.params.mealId;
     const [meal, setMeal] = useState({});
-    const [size, setSize] = useState(null);
+    const [size, setSize] = useState("S");
     const [extras, setExtras] = useState([]);
     const [qty, setQty] = useState(1);
 
@@ -37,6 +38,8 @@ export default function DetailsScreen({
                 : [...prevExtras, extra]
         );
     };
+
+    const totalPrice = calculateTotalPrice(meal.price || 0, size, extras, qty);
 
     return (
         <View style={styles.container}>
@@ -79,7 +82,7 @@ export default function DetailsScreen({
             <View style={styles.footer}>
                 <View style={styles.priceContainer}>
                     <Text style={styles.totalLabel}>Total</Text>
-                    <Text style={styles.totalPrice}>${(qty * meal.price).toFixed(2)}</Text>
+                    <Text style={styles.totalPrice}>${totalPrice.toFixed(2)}</Text>
                 </View>
                 <View style={styles.footerButtons}>
                     <Button
