@@ -1,19 +1,25 @@
 import { Alert, FlatList, RefreshControl, ScrollView, StyleSheet, Text, View } from "react-native";
-import { featuredItems } from "../data/data";
 import FeaturedCard from "../components/FeaturedCard";
 import CategoryCard from "../components/CategoryCard";
 import { Link } from "@react-navigation/native";
 import { useEffect, useState } from "react";
-import { categoryApi } from "../api";
+import { categoryApi, mealApi } from "../api";
 
 export default function HomeScreen() {
 
     const [categories, setCategories] = useState([]);
+    const [featuredMeals, setFeaturedMeals] = useState([]);
     const [refreshing, setRefreshing] = useState(false);
 
     useEffect(() => {
         categoryApi.getAll()
             .then(setCategories)
+            .catch((err) => Alert.alert("Error", err.message))
+    }, []);
+
+    useEffect(() => {
+        mealApi.getAll()
+            .then((meals) => setFeaturedMeals(meals.slice(0, 5)))
             .catch((err) => Alert.alert("Error", err.message))
     }, []);
 
@@ -47,10 +53,10 @@ export default function HomeScreen() {
             <View style={styles.section}>
                 <Text style={styles.sectionTitle}>Featured Items</Text>
                 <FlatList
-                    data={featuredItems}
-                    keyExtractor={(item) => item.id}
+                    data={featuredMeals}
+                    keyExtractor={(item) => String(item.id)}
                     renderItem={({ item }) => (
-                        <Link screen="Details" params={{ item }}>
+                        <Link screen="Details" params={{ mealId: item.id }}>
                             <FeaturedCard {...item} />
                         </Link>
                     )}
