@@ -14,3 +14,11 @@ export const calculateTotalPrice = (basePrice, size, extras, quantity) => {
   const totalPrice = (basePrice * sizeMultiplier + extrasPrice) * quantity;
   return totalPrice;
 };
+
+export const AVAILABLE_EXTRAS = [
+  "Extra Cheese",
+  "Spicy sauce",
+  "Bacon",
+  "Avocado",
+  "Jalapenos",
+];

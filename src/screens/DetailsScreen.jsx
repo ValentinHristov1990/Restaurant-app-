@@ -5,21 +5,15 @@ import { mealApi } from "../api";
 import SizeSelector from "../components/SizeSelector";
 import ExtrasSelector from "../components/ExtrasSelector";
 import QuantityStepper from "../components/QuantityStepper";
-import { calculateTotalPrice } from "../utils/cartUtils";
-
-export const AVAILABLE_EXTRAS = [
-    "Extra Cheese",
-    "Spicy sauce",
-    "Bacon",
-    "Avocado",
-    "Jalapenos",
-];
+import { calculateTotalPrice, AVAILABLE_EXTRAS } from "../utils/cartUtils";
+import { useCart } from "../contexts/cart-contexts/useCart";
 
 export default function DetailsScreen({
     route,
     navigation,
 }) {
     const mealId = route.params.mealId;
+    const { addToCart } = useCart();
     const [meal, setMeal] = useState({});
     const [size, setSize] = useState("S");
     const [extras, setExtras] = useState([]);
@@ -40,6 +34,17 @@ export default function DetailsScreen({
     };
 
     const totalPrice = calculateTotalPrice(meal.price || 0, size, extras, qty);
+
+
+    const handleAddToCart = () => {
+        addToCart({
+            item: meal.id,
+            size: size,
+            extras: extras,
+            quantity: qty
+        });
+        navigation.navigate('MainStack');
+    };
 
     return (
         <View style={styles.container}>
@@ -87,6 +92,7 @@ export default function DetailsScreen({
                 <View style={styles.footerButtons}>
                     <Button
                         title="Add to Cart"
+                        onPress={handleAddToCart}
                         style={styles.addButton}
                     />
                     <Button
