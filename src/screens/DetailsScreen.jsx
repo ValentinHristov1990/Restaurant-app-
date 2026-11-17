@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { mealApi } from "../api";
 import SizeSelector from "../components/SizeSelector";
 import ExtrasSelector from "../components/ExtrasSelector";
+import QuantityStepper from "../components/QuantityStepper";
 
 export const AVAILABLE_EXTRAS = [
     "Extra Cheese",
@@ -21,6 +22,7 @@ export default function DetailsScreen({
     const [meal, setMeal] = useState({});
     const [size, setSize] = useState(null);
     const [extras, setExtras] = useState([]);
+    const [qty, setQty] = useState(1);
 
     useEffect(() => {
         mealApi.getById(mealId)
@@ -62,18 +64,22 @@ export default function DetailsScreen({
                         onToggle={toggleExtra}
                     />
 
-                    <View style={styles.divider} />
-
                     <View style={styles.qtySection}>
                         <Text style={styles.qtyLabel}>Quantity</Text>
+                        < QuantityStepper
+                            qty={qty}
+                            onIncrement={() => setQty(q => q + 1)}
+                            onDecrement={() => setQty(q => q > 1 ? q - 1 : 1)} />
                     </View>
+
+                    <View style={styles.divider} />
                 </View>
             </ScrollView>
 
             <View style={styles.footer}>
                 <View style={styles.priceContainer}>
                     <Text style={styles.totalLabel}>Total</Text>
-                    <Text style={styles.totalPrice}>${13.99}</Text>
+                    <Text style={styles.totalPrice}>${(qty * meal.price).toFixed(2)}</Text>
                 </View>
                 <View style={styles.footerButtons}>
                     <Button
