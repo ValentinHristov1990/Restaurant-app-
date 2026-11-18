@@ -1,28 +1,29 @@
 import { StyleSheet, View, ScrollView, Image, Text, Alert } from "react-native";
-import Button from "../components/Button";
 import { useEffect, useState } from "react";
-import { mealApi } from "../api";
+import { useCart } from "../contexts/cart-context/useCart";
 import SizeSelector from "../components/SizeSelector";
 import ExtrasSelector from "../components/ExtrasSelector";
+import Button from "../components/Button";
+import { mealApi } from "../api";
 import QuantityStepper from "../components/QuantityStepper";
-import { calculateTotalPrice, AVAILABLE_EXTRAS } from "../utils/cartUtils";
-import { useCart } from "../contexts/cart-contexts/useCart";
+import { calculatePrice, AVAILABLE_EXTRAS, calculateUnitPrice, calculateTotalPrice } from "../utils/cartUtils";
 
 export default function DetailsScreen({
     route,
     navigation,
 }) {
-    const mealId = route.params.mealId;
-    const { addToCart } = useCart();
+    const { addToCart, removeFromCart, incrementQty, decrementQty } = useCart();
     const [meal, setMeal] = useState({});
-    const [size, setSize] = useState("S");
+    const [size, setSize] = useState('S');
     const [extras, setExtras] = useState([]);
     const [qty, setQty] = useState(1);
+
+    const mealId = route.params.mealId;
 
     useEffect(() => {
         mealApi.getById(mealId)
             .then(setMeal)
-            .catch((error) => Alert.alert("Error:", error.message))
+            .catch((error) => Alert.alert('Error', error.message));
     }, [mealId]);
 
     const toggleExtra = (extra) => {
@@ -33,18 +34,24 @@ export default function DetailsScreen({
         );
     };
 
+    const unitPrice = calculateUnitPrice(meal.price || 0, size, extras);
     const totalPrice = calculateTotalPrice(meal.price || 0, size, extras, qty);
-
 
     const handleAddToCart = () => {
         addToCart({
-            item: meal.id,
-            size: size,
-            extras: extras,
-            quantity: qty
+            item: meal,
+            options: {
+                size,
+                extras,
+                qty,
+            },
+            totalPrice,
+            unitPrice,
         });
+
         navigation.navigate('MainStack');
-    };
+    }
+
 
     return (
         <View style={styles.container}>
@@ -72,15 +79,16 @@ export default function DetailsScreen({
                         onToggle={toggleExtra}
                     />
 
+                    <View style={styles.divider} />
+
                     <View style={styles.qtySection}>
                         <Text style={styles.qtyLabel}>Quantity</Text>
-                        < QuantityStepper
+                        <QuantityStepper
                             qty={qty}
                             onIncrement={() => setQty(q => q + 1)}
-                            onDecrement={() => setQty(q => q > 1 ? q - 1 : 1)} />
+                            onDecrement={() => setQty(q => q > 1 ? q - 1 : q)}
+                        />
                     </View>
-
-                    <View style={styles.divider} />
                 </View>
             </ScrollView>
 
@@ -98,7 +106,7 @@ export default function DetailsScreen({
                     <Button
                         title="View Cart"
                         variant="outline"
-                        onPress={() => navigation.navigate('CartModal')}
+                        onPress={() => navigation.navigate('CartMain')}
                         style={styles.viewCartButton}
                     />
                 </View>
