@@ -1,18 +1,21 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState, useRef } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function usePersistedState(key, initialValue) {
   const [state, setState] = useState(initialValue);
+  const hasLoaded = useRef(false);
 
   useEffect(() => {
     const loadState = async () => {
       try {
-        const StoredState = await AsyncStorage.getItem(key);
-        if (StoredState) {
-          setState(JSON.parse(StoredState));
+        const storedState = await AsyncStorage.getItem(key);
+        if (storedState) {
+          setState(JSON.parse(storedState));
         }
       } catch (error) {
         console.error("Error reading from AsyncStorage", error);
+      } finally {
+        hasLoaded.current = true;
       }
     };
 
@@ -20,6 +23,8 @@ export default function usePersistedState(key, initialValue) {
   }, [key]);
 
   useEffect(() => {
+    if (!hasLoaded.current) return;
+
     const saveState = async () => {
       try {
         await AsyncStorage.setItem(key, JSON.stringify(state));
@@ -30,4 +35,6 @@ export default function usePersistedState(key, initialValue) {
 
     saveState();
   }, [key, state]);
+
+  return [state, setState];
 }

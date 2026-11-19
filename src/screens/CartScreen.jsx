@@ -1,5 +1,5 @@
 import { View, Text, FlatList, StyleSheet } from "react-native";
-import { useCart } from "../contexts/cart-context/useCart";
+import { useCart } from "../contexts/cart-contexts/useCart";
 import Button from "../components/Button";
 import CartLineItem from "../components/CartLineItem";
 
@@ -18,7 +18,7 @@ export default function CartScreen() {
                         onRemove={() => removeFromCart(index)}
                     />
                 )}
-                keyExtractor={(cartItem) => cartItem.item.id}
+                keyExtractor={(cartItem, index) => `${cartItem.item.id}-${index}`}
                 contentContainerStyle={styles.list}
                 showsVerticalScrollIndicator={false}
             />

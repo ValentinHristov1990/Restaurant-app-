@@ -15,28 +15,46 @@ export default function CartProvider({ children }) {
 
     const incrementQty = (index) => {
         setCartItems((prevCart) => {
-            prevCart.reduce((acc, item, i) => {
-                i === index ? item.qty += 1 : item.qty;
-                return acc;
-            }, []);
+            return prevCart.map((line, i) => {
+                if (i !== index) return line;
+
+                const qty = line.options.qty + 1;
+                return {
+                    ...line,
+                    options: { ...line.options, qty },
+                    totalPrice: line.unitPrice * qty,
+                };
+            });
         });
     };
 
     const decrementQty = (index) => {
         setCartItems((prevCart) => {
-            prevCart.reduce((acc, item, i) => {
-                i === index ? item.qty -= 1 : item.qty;
-                return acc;
-            }, []);
+            return prevCart.map((line, i) => {
+                if (i !== index) return line;
+
+                const qty = Math.max(1, line.options.qty - 1);
+                return {
+                    ...line,
+                    options: { ...line.options, qty },
+                    totalPrice: line.unitPrice * qty,
+                };
+            });
         });
     };
+
+    const totalOrderPrice = cartItems.reduce(
+        (total, line) => total + line.totalPrice,
+        0
+    );
 
     const value = {
         cartItems,
         addToCart,
         removeFromCart,
         incrementQty,
-        decrementQty
+        decrementQty,
+        totalOrderPrice,
     };
 
     return (

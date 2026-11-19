@@ -1,18 +1,23 @@
-export const formatOptions = (options) => {
-  const parts = [`size: ${options.size}`];
+export const formatOptions = (extras = [], size = "S") => {
+  const parts = [`size: ${size}`];
 
-  if (options.extras && options.extras.length > 0) {
-    parts.push(`extras: ${options.extras.join(", ")}`);
+  if (extras.length > 0) {
+    parts.push(`extras: ${extras.join(", ")}`);
   }
 
   return parts.join(" ● ");
 };
 
-export const calculateTotalPrice = (basePrice, size, extras, quantity) => {
+export const calculateUnitPrice = (basePrice, size, extras = []) => {
   const sizeMultiplier = size === "M" ? 1.2 : size === "L" ? 1.5 : 1;
   const extrasPrice = extras.length * 0.5;
-  const totalPrice = (basePrice * sizeMultiplier + extrasPrice) * quantity;
-  return totalPrice;
+  return basePrice * sizeMultiplier + extrasPrice;
+};
+
+export const calculatePrice = calculateUnitPrice;
+
+export const calculateTotalPrice = (basePrice, size, extras, quantity) => {
+  return calculateUnitPrice(basePrice, size, extras) * quantity;
 };
 
 export const AVAILABLE_EXTRAS = [

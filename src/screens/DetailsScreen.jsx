@@ -1,18 +1,18 @@
 import { StyleSheet, View, ScrollView, Image, Text, Alert } from "react-native";
 import { useEffect, useState } from "react";
-import { useCart } from "../contexts/cart-context/useCart";
+import { useCart } from "../contexts/cart-contexts/useCart";
 import SizeSelector from "../components/SizeSelector";
 import ExtrasSelector from "../components/ExtrasSelector";
 import Button from "../components/Button";
 import { mealApi } from "../api";
 import QuantityStepper from "../components/QuantityStepper";
-import { calculatePrice, AVAILABLE_EXTRAS, calculateUnitPrice, calculateTotalPrice } from "../utils/cartUtils";
+import { AVAILABLE_EXTRAS, calculateUnitPrice, calculateTotalPrice } from "../utils/cartUtils";
 
 export default function DetailsScreen({
     route,
     navigation,
 }) {
-    const { addToCart, removeFromCart, incrementQty, decrementQty } = useCart();
+    const { addToCart } = useCart();
     const [meal, setMeal] = useState({});
     const [size, setSize] = useState('S');
     const [extras, setExtras] = useState([]);
